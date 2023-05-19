@@ -39,8 +39,22 @@ async function run() {
     const alltoysDatabase = client.db('kidz').collection('alltoys')
 
     app.get('/alltoys', async(req,res)=>{
+
+      // let query = {};
+      // if(req.query?.email){
+      //   query ={email : req.query.email}
+      // }
       const cursor =alltoysDatabase.find()
       const result = await cursor.toArray()
+      res.send(result)
+    })
+
+    app.post('/alltoys',async(req,res) =>{
+      const body = req.body 
+      console.log(body)
+      const result = await alltoysDatabase.insertOne(body)
+
+      console.log(result)
       res.send(result)
     })
     await client.db("admin").command({ ping: 1 });
