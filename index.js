@@ -49,7 +49,14 @@ async function run() {
       res.send(result)
     })
 
-   
+    app.post('/allposttoys',async(req,res) =>{
+      const body = req.body 
+      console.log(body)
+      const result = await alltoysDatabase.insertOne(body)
+
+      console.log(result)
+      res.send(result)
+    })
 
     app.get("/mytoys/:email",async(req,res)=>{
       console.log(req.params.email)
