@@ -48,19 +48,33 @@ async function run() {
       const result = await cursor.toArray()
       res.send(result)
     })
+    app.get('/mytoys', async(req,res)=>{
+
+       
+      const cursor =alltoysDatabase.find()
+      const result = await cursor.toArray()
+      res.send(result)
+    })
 
     app.post('/allposttoys',async(req,res) =>{
       const body = req.body 
-      console.log(body)
+      // console.log(body)
       const result = await alltoysDatabase.insertOne(body)
 
-      console.log(result)
+      // console.log(result)
       res.send(result)
     })
 
     app.get("/mytoys/:email",async(req,res)=>{
-      console.log(req.params.email)
+      // console.log(req.params.email)
       const result = await alltoysDatabase.find({sellerEmail:req.params.email}).toArray()
+      res.send(result)
+    })
+    app.get("/alltoys/:id",async(req,res)=>{
+       const id = req.params.id
+      const query ={_id: new ObjectId(id)}
+      const result = await alltoysDatabase.findOne(query)
+      console.log(result)
       res.send(result)
     })
     app.delete('/mytoys/:id',async(req,res)=>{
@@ -70,6 +84,27 @@ async function run() {
       res.send(result)
      })
     
+     app.put("/alltoys/:id",async(req,res) =>{
+      const id = req.params.id 
+      const filter = {_id: new ObjectId(id)}
+      const option = {upsert:true}
+      const updatedToys = req.body
+      // console.log(updatedToys)
+          // create a document that sets the plot of the movie
+    const updateDoc = {
+      $set: {
+       price:updatedToys.price,
+       availableQuantity:updatedToys.availableQuantity,
+       description:updatedToys.description,
+
+      },
+      
+    };
+     
+    const result = await alltoysDatabase.updateOne(filter,updateDoc,option)
+    res.send(result)
+    })
+
     app.get("/getToysByText/:text", async (req, res) => {
       const text = req.params.text;
       const result = await alltoysDatabase.find({
