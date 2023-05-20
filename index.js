@@ -63,6 +63,21 @@ async function run() {
       const result = await alltoysDatabase.find({sellerEmail:req.params.email}).toArray()
       res.send(result)
     })
+
+    
+    app.get("/getToysByText/:text", async (req, res) => {
+      const text = req.params.text;
+      const result = await alltoysDatabase.find({
+          $or: [
+            { toyName: { $regex: text, $options: "i" } },
+            { subCategory: { $regex: text, $options: "i" } },
+          ],
+        })
+        .toArray();
+      res.send(result);
+    });
+
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
