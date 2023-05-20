@@ -1,7 +1,7 @@
 const express = require('express') 
 const cors = require('cors')
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const port = process.env.PORT || 1000
 require('dotenv').config()
@@ -63,7 +63,12 @@ async function run() {
       const result = await alltoysDatabase.find({sellerEmail:req.params.email}).toArray()
       res.send(result)
     })
-
+    app.delete('/mytoys/:id',async(req,res)=>{
+      const id = req.params.id 
+      const query = { _id: new ObjectId(id)}
+      const result = await alltoysDatabase.deleteOne(query)
+      res.send(result)
+     })
     
     app.get("/getToysByText/:text", async (req, res) => {
       const text = req.params.text;
@@ -77,6 +82,21 @@ async function run() {
       res.send(result);
     });
 
+    // app.put("/updateToy/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const body = req.body;
+    //   console.log(body);
+    //   const filter = { _id: new ObjectId(id) };
+    //   const updateDoc = {
+    //     $set: {
+    //       title: body.toyName,
+    //       price: body.price,
+    //       // category: body.subCategory,
+    //     },
+    //   };
+    //   const result = await alltoysDatabase.updateOne(filter, updateDoc);
+    //   res.send(result);
+    // });
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -94,4 +114,4 @@ app.listen(port,()=>{
   console.log(`Surver is running on port ${port}`)
 })
 
-// http://localhost:1000/getToysByText/Playsets
+ 
