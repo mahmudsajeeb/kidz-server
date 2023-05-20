@@ -93,3 +93,5 @@ app.get("/",(req,res)=>{
 app.listen(port,()=>{
   console.log(`Surver is running on port ${port}`)
 })
+
+// http://localhost:1000/getToysByText/Playsets
